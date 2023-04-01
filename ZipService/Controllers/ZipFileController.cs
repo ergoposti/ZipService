@@ -1,4 +1,6 @@
+#nullable enable
 using Microsoft.AspNetCore.Mvc;
+using ZipService.Validation;
 
 namespace ZipService.Controllers
 {
@@ -6,11 +8,6 @@ namespace ZipService.Controllers
     [Route("[controller]")]
     public class ZipFileController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
         private readonly ILogger<ZipFileController> _logger;
 
         public ZipFileController(ILogger<ZipFileController> logger)
@@ -18,16 +15,22 @@ namespace ZipService.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpPost("upload")]
+        [StructuredZipFile]
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            if (file == null || file.Length == 0)
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return BadRequest("Please select a file to upload.");
+            }
+
+            var filename = Path.GetFileName(file.FileName);
+
+            // TODO Consider using one stream, some minor overhead here with duplicate streams since we create other one in validation
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+
+            return Ok($"File {filename} has been uploaded successfully.");
         }
     }
 }
