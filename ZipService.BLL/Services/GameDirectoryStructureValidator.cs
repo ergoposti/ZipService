@@ -8,6 +8,7 @@ namespace ZipService.BLL.Services
     {
         private static string[] AllowedImageExtensions = new[] { ".jpg", ".png" };
 
+        // TODO refacto into pipeline/chain approach, atm there's a lot of code together in one method, this would make it easier to read and modify
         public string[] Validate(FileNode rootNode)
         {
             var errors = new List<string>();
@@ -18,7 +19,6 @@ namespace ZipService.BLL.Services
                 return errors.ToArray();
             }
 
-            // check for dlls directory
             var dlls = rootNode.Children.SingleOrDefault(c => c.Name == "dlls" && c.IsDirectory);
             if (dlls == null)
             {
@@ -26,13 +26,11 @@ namespace ZipService.BLL.Services
             }
             else
             {
-                // check for MyGame.dll
                 if (!dlls.Children.Any(c => c.Name == $"{rootNode.Name}.dll" && !c.IsDirectory))
                 {
                     errors.Add($"{rootNode.Name}.dll is missing from dlls directory");
                 }
 
-                // check for invalid dlls
                 foreach (var dll in dlls.Children)
                 {
                     if (Path.GetExtension(dll.Name) != ".dll")
@@ -42,7 +40,6 @@ namespace ZipService.BLL.Services
                 }
             }
 
-            // check for images directory
             var images = rootNode.Children.SingleOrDefault(c => c.Name == "images" && c.IsDirectory);
             if (images == null)
             {
@@ -54,7 +51,6 @@ namespace ZipService.BLL.Services
             }
             else
             {
-                // check for invalid image files
                 foreach (var image in images.Children)
                 {
                     if (!AllowedImageExtensions.Contains(Path.GetExtension(image.Name)))
@@ -64,7 +60,6 @@ namespace ZipService.BLL.Services
                 }
             }
 
-            // check for languages directory
             var languages = rootNode.Children.SingleOrDefault(c => c.Name == "languages" && c.IsDirectory);
             if (languages == null)
             {
@@ -72,7 +67,6 @@ namespace ZipService.BLL.Services
             }
             else
             {
-                // check for language files
                 foreach (var languageFile in languages.Children)
                 {
                     if (Path.GetExtension(languageFile.Name) != ".xml")
@@ -85,7 +79,6 @@ namespace ZipService.BLL.Services
                     }
                 }
 
-                // check for missing language files
                 if (!languages.Children.Any(x => IsValidLanguageFileName(rootNode.Name, x.Name)))
                 {
                     errors.Add("No language files found in languages directory");

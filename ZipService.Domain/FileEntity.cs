@@ -2,11 +2,13 @@
 {
     public class FileEntity : BaseEntity
     {
-        public string Path { get; set; }
+        public string FileName { get; }
+        public Guid FileId { get; }
 
-        public FileEntity(string path)
+        public FileEntity(Guid fileId, string fileName)
         {
-            Path = path;
+            FileId = fileId;
+            FileName = fileName;
         }
     }
 }

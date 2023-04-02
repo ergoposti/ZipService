@@ -1,4 +1,5 @@
-﻿using ZipService.BLL.Services;
+﻿using Shouldly;
+using ZipService.BLL.Services;
 using ZipService.Shared;
 
 namespace ZipService.BLL.Tests.Services
@@ -21,38 +22,38 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("dlls", true)
             {
-                new FileNode("dlls", true)
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("MyGame.dll", false)
-                    }
-                },
-                new FileNode("images", true)
+                    new FileNode("MyGame.dll", false)
+                }
+            },
+            new FileNode("images", true)
+            {
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("0.jpg", false),
-                        new FileNode("1.jpg", false)
-                    }
-                },
-                new FileNode("languages", true)
+                    new FileNode("0.jpg", false),
+                    new FileNode("1.jpg", false)
+                }
+            },
+            new FileNode("languages", true)
+            {
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("MyGame_en.xml", false),
-                        new FileNode("MyGame_es.xml", false)
-                    }
+                    new FileNode("MyGame_en.xml", false),
+                    new FileNode("MyGame_es.xml", false)
                 }
             }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(0, result.Length);
+            result.ShouldBeEmpty();
         }
 
         [TestMethod]
@@ -62,31 +63,31 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("images", true)
             {
-                new FileNode("images", true)
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("0.jpg", false)
-                    }
-                },
-                new FileNode("languages", true)
+                    new FileNode("0.jpg", false)
+                }
+            },
+            new FileNode("languages", true)
+            {
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("MyGame_en.xml", false),
-                        new FileNode("MyGame_es.xml", false)
-                    }
+                    new FileNode("MyGame_en.xml", false),
+                    new FileNode("MyGame_es.xml", false)
                 }
             }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual("dlls directory is missing", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe("dlls directory is missing");
         }
 
         [TestMethod]
@@ -96,39 +97,39 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("dlls", true)
+            {
+                Children = new List<FileNode>
                 {
-                    new FileNode("dlls", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame.dll", false),
-                            new FileNode("OtherGame.exe", false),
-                        }
-                    },
-                    new FileNode("images", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("0.jpg", false)
-                        }
-                    },
-                    new FileNode("languages", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame_en.xml", false),
-                            new FileNode("MyGame_es.xml", false)
-                        }
-                    }
+                    new FileNode("MyGame.dll", false),
+                    new FileNode("OtherGame.exe", false),
                 }
+            },
+            new FileNode("images", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("0.jpg", false)
+                }
+            },
+            new FileNode("languages", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("MyGame_en.xml", false),
+                    new FileNode("MyGame_es.xml", false)
+                }
+            }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual("MyGame/dlls/OtherGame.exe has invalid file type", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe("MyGame/dlls/OtherGame.exe has invalid file type");
         }
 
         [TestMethod]
@@ -161,8 +162,8 @@ namespace ZipService.BLL.Tests.Services
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual("images directory is missing", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe("images directory is missing");
         }
 
         [TestMethod]
@@ -172,35 +173,35 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("dlls", true)
+            {
+                Children = new List<FileNode>
                 {
-                    new FileNode("dlls", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame.dll", false)
-                        }
-                    },
-                    new FileNode("languages", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame_en.xml", false),
-                            new FileNode("MyGame_es.xml", false)
-                        }
-                    },
-                    new FileNode("images", true)
-                    {
-                        Children = new List<FileNode>(),
-                    }
+                    new FileNode("MyGame.dll", false)
                 }
+            },
+            new FileNode("languages", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("MyGame_en.xml", false),
+                    new FileNode("MyGame_es.xml", false)
+                }
+            },
+            new FileNode("images", true)
+            {
+                Children = new List<FileNode>(),
+            }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual("images directory doesn't contain any image files", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe("images directory doesn't contain any image files");
         }
 
         [TestMethod]
@@ -210,39 +211,39 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("dlls", true)
             {
-                new FileNode("dlls", true)
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("MyGame.dll", false)
-                    }
-                },
-                new FileNode("images", true)
+                    new FileNode("MyGame.dll", false)
+                }
+            },
+            new FileNode("images", true)
+            {
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("0.jpg", false),
-                        new FileNode("1.gif", false),
-                    }
-                },
-                new FileNode("languages", true)
+                    new FileNode("0.jpg", false),
+                    new FileNode("1.gif", false),
+                }
+            },
+            new FileNode("languages", true)
+            {
+                Children = new List<FileNode>
                 {
-                    Children = new List<FileNode>
-                    {
-                        new FileNode("MyGame_en.xml", false),
-                        new FileNode("MyGame_es.xml", false)
-                    }
+                    new FileNode("MyGame_en.xml", false),
+                    new FileNode("MyGame_es.xml", false)
                 }
             }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual("MyGame/images/1.gif has invalid file type", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe("MyGame/images/1.gif has invalid file type");
         }
 
         [TestMethod]
@@ -252,30 +253,30 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("dlls", true)
+            {
+                Children = new List<FileNode>
                 {
-                    new FileNode("dlls", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame.dll", false)
-                        }
-                    },
-                    new FileNode("images", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("0.jpg", false)
-                        }
-                    }
+                    new FileNode("MyGame.dll", false)
                 }
+            },
+            new FileNode("images", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("0.jpg", false)
+                }
+            }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual("languages directory is missing", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe("languages directory is missing");
         }
 
         [TestMethod]
@@ -285,39 +286,39 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("dlls", true)
+            {
+                Children = new List<FileNode>
                 {
-                    new FileNode("dlls", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame.dll", false)
-                        }
-                    },
-                    new FileNode("images", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("0.jpg", false),
-                            new FileNode("1.jpg", false)
-                        }
-                    },
-                    new FileNode("languages", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame_en.txt", false),
-                            new FileNode("MyGame_es.xml", false)
-                        }
-                    }
+                    new FileNode("MyGame.dll", false)
                 }
+            },
+            new FileNode("images", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("0.jpg", false),
+                    new FileNode("1.jpg", false)
+                }
+            },
+            new FileNode("languages", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("MyGame_en.txt", false),
+                    new FileNode("MyGame_es.xml", false)
+                }
+            }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual("MyGame/languages/MyGame_en.txt has invalid file type", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe("MyGame/languages/MyGame_en.txt has invalid file type");
         }
 
         [TestMethod]
@@ -329,39 +330,39 @@ namespace ZipService.BLL.Tests.Services
             var rootNode = new FileNode("MyGame", true)
             {
                 Children = new List<FileNode>
+        {
+            new FileNode("dlls", true)
+            {
+                Children = new List<FileNode>
                 {
-                    new FileNode("dlls", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame.dll", false)
-                        }
-                    },
-                    new FileNode("images", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("0.jpg", false),
-                            new FileNode("1.jpg", false)
-                        }
-                    },
-                    new FileNode("languages", true)
-                    {
-                        Children = new List<FileNode>
-                        {
-                            new FileNode("MyGame_en.xml", false),
-                            new FileNode($"{languageFilename}.xml", false)
-                        }
-                    }
+                    new FileNode("MyGame.dll", false)
                 }
+            },
+            new FileNode("images", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("0.jpg", false),
+                    new FileNode("1.jpg", false)
+                }
+            },
+            new FileNode("languages", true)
+            {
+                Children = new List<FileNode>
+                {
+                    new FileNode("MyGame_en.xml", false),
+                    new FileNode($"{languageFilename}.xml", false)
+                }
+            }
+        }
             };
 
             // Act
             var result = _validator.Validate(rootNode);
 
             // Assert
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual($"MyGame/languages/{languageFilename}.xml has incorrect file name", result[0]);
+            result.Length.ShouldBe(1);
+            result[0].ShouldBe($"MyGame/languages/{languageFilename}.xml has incorrect file name");
         }
     }
 }

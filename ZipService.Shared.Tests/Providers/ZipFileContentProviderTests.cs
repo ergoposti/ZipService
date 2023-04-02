@@ -1,4 +1,5 @@
-﻿using ZipService.Shared.Providers;
+﻿using Shouldly;
+using ZipService.Shared.Providers;
 
 namespace ZipService.Shared.Tests.Providers
 {
@@ -58,7 +59,7 @@ namespace ZipService.Shared.Tests.Providers
             }
 
             // Assert
-            Assert.IsTrue(expectedTree.Equals(actualTree));
+            actualTree.ShouldBe(expectedTree);
         }
     }
 }

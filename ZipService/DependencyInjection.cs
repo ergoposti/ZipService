@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using ZipService.Validation;
 
 namespace ZipService
 {

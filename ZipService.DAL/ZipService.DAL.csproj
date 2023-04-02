@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="LanguageExt.Core" Version="4.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZipService.Domain\ZipService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

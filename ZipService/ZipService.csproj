@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LanguageExt.Core" Version="4.4.2" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
@@ -16,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZipService.BLL\ZipService.BLL.csproj" />
+    <ProjectReference Include="..\ZipService.DAL\ZipService.DAL.csproj" />
+    <ProjectReference Include="..\ZipService.Domain\ZipService.Domain.csproj" />
   </ItemGroup>
 
 </Project>
