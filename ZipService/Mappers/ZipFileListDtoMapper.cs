@@ -24,10 +24,10 @@ namespace ZipService.Mappers
         {
             var root = _zipFileContentProvider.GetZipFileTree(stream, fileEntity.FileName);
 
-            return Map(fileEntity.Id, root);
+            return Map(fileEntity, root);
         }
 
-        private static ZipFileDto Map(Guid id, FileNode fileNode) => new ZipFileDto(id, fileNode.Name, fileNode.Children.Select(Map).ToArray());
+        private static ZipFileDto Map(FileEntity fileEntity, FileNode fileNode) => new ZipFileDto(fileEntity.Id, fileEntity.FileId, fileNode.Name, fileNode.Children.Select(Map).ToArray());
 
         private static FileNodeDto Map(FileNode fileNode) => new FileNodeDto(fileNode.Name, fileNode.IsDirectory, fileNode.Children.Select(Map).ToArray());
     }

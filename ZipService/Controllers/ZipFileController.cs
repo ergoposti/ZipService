@@ -64,6 +64,7 @@ namespace ZipService.Controllers
         // TODO this shouldn't be part of this service, should be separate. 
         public async Task<IActionResult> Download(Guid fileId)
         {
+            // TODO filename
             var fileResult = await _blobService.LoadFile(fileId);
 
             return fileResult.Match<IActionResult>(fileStream =>

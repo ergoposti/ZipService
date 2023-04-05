@@ -21,6 +21,20 @@ namespace ZipService
             services.AddScoped<IZipFileListDtoMapper, ZipFileListDtoMapper>();
             services.AddSingleton<IBlobService, LocalBlobService>();
             services.AddScoped<IUnitOfWork<FileEntity>, UnitOfWork<FileEntity>>();
+
+            // Add CORS policy
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:5173")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .SetIsOriginAllowedToAllowWildcardSubdomains()
+                               .AllowCredentials();
+                    });
+            });
         }
 
         public static void Configure(WebApplication app, IWebHostEnvironment env)
@@ -33,6 +47,9 @@ namespace ZipService
 
             app.UseAuthorization();
             app.MapControllers();
+
+            // Use the CORS middleware with the policy defined above
+            app.UseCors("AllowLocalhost");
         }
     }
 }
